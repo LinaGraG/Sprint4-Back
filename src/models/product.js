@@ -1,137 +1,92 @@
-const mongoose = require("mongoose");
+const mongoose = require("mongoose")
 
-const productSchema = mongoose.Schema({
-  sku: {
-    type: String,
-    required: [true, "Por favor, registra el código del producto."],
-    trim: true,
-    unique: true,
-    uppercase: true,
-  },
-  title: {
-    type: String,
-    required: [true, "Por favor, registra el título del producto."],
-    trim: true,
-    maxLength: [
-      120,
-      "El título del producto no debe exceder los 120 caracteres.",
-    ],
-  },
-  subtitle: {
-    type: String,
-    required: [true, "Por favor, registra el subtítulo del producto."],
-    trim: true,
-    maxLength: [
-      120,
-      "El subtítulo del producto no debe exceder los 120 caracteres.",
-    ],
-  },
-  image: {
-    type: String,
-    required: true,
-  },
-  category: {
-    type: String,
-    required: [true, "Por favor, selecciona la categoria del producto."],
-    enum: {
-      values: [
-        "Leche y yogures",
-        "Postres y helados",
-        "Quesos frescos",
-        "Quesos semi-maduros",
-        "Quesos maduros",
-      ],
-    },
-  },
-  description: {
-    type: String,
-    required: [true, "Por favor, registra una descripcion para el producto."],
-  },
-  ingredients: {
-    type: String,
-    required: [true, "Por favor, registra los ingredientes del producto."],
-  },
-  price: {
-    type: Number,
-    required: [true, "Por favor, registra el precio del producto."],
-    maxLength: [
-      8,
-      "El precio del producto no puede estar por encima de 99'999.999",
-    ],
-    default: 0.0,
-  },
-  inventory: {
-    type: Number,
-    required: [true, "Por favor, registra el inventario del producto"],
-    maxLength: [5, "Cantidad maxima del producto no puede sobrepasar 99999"],
-    default: 0,
-  },
-  seller: {
-    type: String,
-    required: [true, "Por favor, selecciona el vendedor del producto."],
-    enum: {
-      values: ["Daniela"],
-    },
-  },
-  totalSales: {
-    type: Number,
-    default: 0,
-  },
-  hasTaxes: {
-    type: String,
-    required: [true, "Por favor, selecciona si el producto tiene impuestos."],
-    enum: {
-      values: ["Si", "No"],
-    },
-  },
-  hasDiscount: {
-    type: String,
-    required: [true, "Por favor, selecciona si el producto tiene descuento."],
-    enum: {
-      values: ["Si", "No"],
-    },
-  },
-  timeLeft: {
-    type: Number,
-    default: 0,
-  },
-  rating: {
-    type: Number,
-    default: 0,
-  },
-  qualifications: {
-    type: Number,
-    default: 0,
-  },
-  reviews: [
-    {
-      clientName: {
+const productosSchema = mongoose.Schema({
+    nombre: {
         type: String,
-        required: true,
-      },
-      rating: {
+        required: [true, "Por favor registra el nombre del producto."],
+        trim: true,
+        maxLength: [120, "El nombre del producto no debe exceder los 120 caracteres."]
+    },
+    precio: {
         type: Number,
-        required: true,
-      },
-      commentary: {
-        type: String,
-        required: true,
-      },
+        required: [true, "Por favor registre el precio del producto."],
+        maxLength: [8, "El precio del producto no puede estar por encima de 99'999.999"],
+        default: 0.0
     },
-  ],
-  createdAt: {
-    type: Date,
-    default: Date.now,
-  },
-  updatedAt: {
-    type: Date,
-    default: Date.now,
-  },
-  user: {
-    type: mongoose.Schema.ObjectId,
-    ref: "User",
-    required: true,
-  },
-});
+    descripcion: {
+        type: String,
+        required: [true, "Por favor registre una descripcion para el producto."]
+    },
+    calificacion: {
+        type: Number,
+        default: 0
+    },
+    imagen: [
+        {
+            public_id: {
+                type: String,
+                required: true
+            },
+            url: {
+                type: String,
+                required: true
+            }
+        }
+    ],
+    categoria: {
+        type: String,
+        required: [true, "Por favor seleccione la categoria del producto."],
+        enum: {
+            values: [
+                "Leche y yogures",
+                "Postres y helados",
+                "Quesos frescos",
+                "Quesos semi-maduros",
+                "Quesos maduros",
+            ]
+        }
+    },
+    vendedor: {
+        type: String,
+        required: [true, "Por favor registre el vendedor de producto"]
+    },
+    inventario: {
+        type: Number,
+        required: [true, "Por favor registre el stock del producto"],
+        maxLength: [5, "Cantidad maxima del producto no puede sobrepasar 99999"],
+        default: 0
+    },
+    numCalificaciones: {
+        type: Number,
+        default: 0
+    },
+    opiniones: [
+        {
+            nombreCliente: {
+                type: String,
+                required: true
+            },
+            rating: {
+                type: Number,
+                required: true
+            },
+            comentario: {
+                type: String,
+                required: true
+            }
+        }
+    ],
+    user: {
+        type: mongoose.Schema.ObjectId,
+        ref: 'User',
+        required: true
+    },
 
-module.exports = mongoose.model("product", productSchema);
+    fechaCreacion: {
+        type: Date,
+        default: Date.now
+    }
+    
+})
+
+module.exports = mongoose.model("productos", productosSchema)

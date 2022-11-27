@@ -3,17 +3,17 @@ const nodemailer = require("nodemailer");
 
 const sendEmail = async (options) => {
   const transport = nodemailer.createTransport({
-    service: 'gmail',
-    host: "smtp.gmail.com",
-    port: 465,
+    service: 'office365',
+    host: "smtp.office365.com",
+    port: 587,
     auth: {
-      user: "prueba.artelak@gmail.com",
-      pass: "kwyzeyolkxhnrakg",
+      user: "maria25mm@hotmail.com",
+      pass: "elbsgzmcpnfshhaj",
     },
   });
 
   const message = {
-    from: "Artelak <noreply@artelak.com>",
+    from: "Artelak <maria25mm@hotmail.com>",
     to: options.email,
     subject: options.subject,
     text: options.message,
