@@ -1,30 +1,30 @@
-const orderModel = require("../models/order");
-const productModel = require("../models/product");
+const Order = require("../models/order");
+const Product = require("../models/product");
 const catchAsyncErrors = require("../middleware/catchAsyncErrors");
 const ErrorHandler = require("../utils/errorHandler");
 
 //Crear una nueva orden
 exports.newOrder = catchAsyncErrors(async (req, res, next) => {
   const {
-    shipmentInfo,
-    items,
-    paymentInfo,
-    itemsPrice,
-    taxesPrice,
-    shipmentPrice,
-    totalPrice,
+    Items,
+    envioInfo,
+    precioItems,
+    precioImpuesto,
+    precioEnvio,
+    precioTotal,
+    pagoInfo
   } = req.body;
 
-  const order = await orderModel.create({
-    items,
-    shipmentInfo,
-    itemsPrice,
-    taxesPrice,
-    shipmentPrice,
-    totalPrice,
-    paymentInfo,
-    paymentDate: Date.now(),
-    user: req.user._id,
+  const order = await Order.create({
+    Items,
+        envioInfo,
+        precioItems,
+        precioImpuesto,
+        precioEnvio,
+        precioTotal,
+        pagoInfo,
+        fechaPago: Date.now(),
+        user: req.user._id
   });
 
   res.status(201).json({
@@ -35,7 +35,7 @@ exports.newOrder = catchAsyncErrors(async (req, res, next) => {
 
 //Ver una orden
 exports.getOrder = catchAsyncErrors(async (req, res, next) => {
-  const order = await orderModel
+  const order = await Order
     .findById(req.params.id)
     .populate("user", "name email"); //restriccion de usuario
 
@@ -51,7 +51,7 @@ exports.getOrder = catchAsyncErrors(async (req, res, next) => {
 
 //Ver todas mis ordenes (usuario logueado)
 exports.myOrders = catchAsyncErrors(async (req, res, next) => {
-  const orders = await orderModel.find({ user: req.user._id });
+  const orders = await Order.find({ user: req.user._id });
 
   res.status(200).json({
     success: true,
@@ -62,11 +62,11 @@ exports.myOrders = catchAsyncErrors(async (req, res, next) => {
 //Admin
 //Ver todas la ordenes (Administrador)
 exports.sales = catchAsyncErrors(async (req, res, next) => {
-  const orders = await orderModel.find();
+  const orders = await Order.find();
 
   let sales = 0;
   orders.forEach((order) => {
-    sales += order.totalPrice;
+    sales += order.precioTotal;//Variable acumuladora
   });
 
   res.status(200).json({
@@ -78,18 +78,18 @@ exports.sales = catchAsyncErrors(async (req, res, next) => {
 
 //Editar una orden (admin)
 exports.updateOrder = catchAsyncErrors(async (req, res, next) => {
-  const order = await orderModel.findById(req.params.id);
+  const order = await Order.findById(req.params.id);
 
   if (!order) {
     return next(new ErrorHandler("Orden no encontrada", 404));
   }
 
-  if (order.shipmentStatus === "Enviado") {
+  if (order.estado === "Enviado") {
     return next(new ErrorHandler("Esta orden ya fue enviada", 400));
   }
 
-  order.shipmentStatus = req.body.shipmentStatus;
-  order.shipmentDate = Date.now();
+  order.estado = req.body.estado; 
+  order.fechaEnvio = Date.now();
 
   await order.save();
 
@@ -100,14 +100,14 @@ exports.updateOrder = catchAsyncErrors(async (req, res, next) => {
 });
 
 async function updateStock(id, quantity) {
-  const product = await productModel.findById(id);
-  product.inventory = product.inventory - quantity;
+  const product = await Product.findById(id);
+  product.inventario = product.inventario - quantity;
   await product.save({ validateBeforeSave: false });
 }
 
 //Eliminar una orden (admin)
 exports.deleteOrder = catchAsyncErrors(async (req, res, next) => {
-  const order = await orderModel.findById(req.params.id);
+  const order = await Order.findById(req.params.id);
 
   if (!order) {
     return next(new ErrorHandler("Esta orden no esta registrada", 404));

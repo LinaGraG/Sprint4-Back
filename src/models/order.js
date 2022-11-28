@@ -1,25 +1,20 @@
-const mongoose = require("mongoose");
+const mongoose = require("mongoose")
 
 const orderSchema = mongoose.Schema({
-  shipmentInfo: {
-    address: {
+  envioInfo: {
+    direccion: {
       type: String,
       required: true,
     },
-    country: {
-      type: String,
-      required: true,
-      default: "Colombia",
-    },
-    city: {
+    ciudad: {
       type: String,
       required: true,
     },
-    phone: {
+    telefono: {
       type: String,
       required: true,
     },
-    state: {
+    departamento: {
       type: String,
       required: true,
     },
@@ -31,69 +26,69 @@ const orderSchema = mongoose.Schema({
   },
   items: [
     {
-      title: {
+      nombre: {
         type: String,
         required: true,
       },
-      quantity: {
+      cantidad: {
         type: Number,
         required: true,
       },
-      image: {
+      imagen: {
         type: String,
         required: true,
       },
-      price: {
+      precio: {
         type: Number,
         required: true,
       },
-      product: {
+      producto: {
         type: mongoose.Schema.Types.ObjectId,
         required: true,
         ref: "product",
       },
     },
   ],
-  paymentInfo: {
+  pagoInfo: {
     id: {
       type: String,
     },
-    paymentStatus: {
+    estado: {
       type: String,
     },
   },
-  paymentDate: {
+  fechaPago: {
     type: Date,
   },
-  itemsPrice: {
+  precioItems: {
     type: Number,
     required: true,
     default: 0.0,
   },
-  taxesPrice: {
+  precioImpuesto: {
     type: Number,
     required: true,
     defautl: 0.0,
   },
-  shipmentPrice: {
+  precioEnvio: {
     type: Number,
     required: true,
     default: 0.0,
   },
-  totalPrice: {
+  precioTotal: {
     type: Number,
     required: true,
     default: 0.0,
   },
-  shipmentStatus: {
+  estado: {
     type: String,
     required: true,
     default: "Procesando",
   },
-  shipmentDate: {
+  fechaEnvio: {
     type: Date,
   },
-  orderDate: {
+  fechaCreacion: {
     type: Date,
     default: Date.now,
   },

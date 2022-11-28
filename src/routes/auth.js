@@ -25,12 +25,12 @@ router.route("/user/passwordRecovery").post(passwordRecovery);
 router.route("/user/resetPassword/:token").post(resetPassword);
 router.route("/user").get(isAuthenticatedUser, getUserProfile);
 router.route("/user/updatePassword").put(isAuthenticatedUser, updatePassword);
-router.route("/user/updateProfile").put(isAuthenticatedUser, updateProfile);
+router.route("/user/ ").put(isAuthenticatedUser, updateProfile);
 
 // Rutas gestionadas por admin
 router.route("/admin/users").get(isAuthenticatedUser, authorizeRoles("admin"), getUsers);
 router.route("/admin/user/:id").get(isAuthenticatedUser, authorizeRoles("admin"), getUserDetails);
-router.route("/admin/user/:id").put(isAuthenticatedUser, authorizeRoles("admin"), updateUser);
-router.route("/admin/user/:id").delete(isAuthenticatedUser, authorizeRoles("admin"), deleteUser);
+router.route("/admin/updateUser/:id").put(isAuthenticatedUser, authorizeRoles("admin"), updateUser);
+router.route("/admin/deleteUser/:id").delete(isAuthenticatedUser, authorizeRoles("admin"), deleteUser);
 
 module.exports = router;
