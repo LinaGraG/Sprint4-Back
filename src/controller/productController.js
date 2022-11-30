@@ -2,8 +2,7 @@ const catchAsyncErrors = require("../middleware/catchAsyncErrors");
 const productModel = require("../models/product");
 const APIFeatures = require("../utils/apiFeatures");
 const ErrorHandler = require("../utils/errorHandler");
-const fetch = (url) =>
-import("node-fetch").then(({ default: fetch }) => fetch(url));
+const fetch = (url) =>import("node-fetch").then(({ default: fetch }) => fetch(url));
 
 // Create product /api/product/new
 exports.newProduct = catchAsyncErrors(async (req, res, next) => {
@@ -20,7 +19,7 @@ exports.newProduct = catchAsyncErrors(async (req, res, next) => {
 //Ver la lista de productos
 exports.getProducts = catchAsyncErrors(async (req, res, next) => {
   const resultsPerPage = 5;
-  const productsCount = await productModel.count();
+  const productsCount = await productModel.countDocuments();
 
   const apiFeatures = new APIFeatures(productModel.find(), req.query)
     .search()

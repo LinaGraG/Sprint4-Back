@@ -8,15 +8,13 @@ class APIFeatures {
     const keyword = this.queryStr.keyword
       ? {
           $or: [
-            { sku: { $regex: this.queryStr.keyword, $options: "i" } },
-            { title: { $regex: this.queryStr.keyword, $options: "i" } },
-            { subtitle: { $regex: this.queryStr.keyword, $options: "i" } },
-            { description: { $regex: this.queryStr.keyword, $options: "i" } },
-            { ingredients: { $regex: this.queryStr.keyword, $options: "i" } }
-          ],
+            { nombre: { $regex: this.queryStr.keyword, $options: "i" } },
+            { descripcion: { $regex: this.queryStr.keyword, $options: "i" } },
+            { categoria: { $regex: this.queryStr.keyword, $options: "i" } },
+                    ],  
         }
       : {};
-
+ 
     this.query = this.query.find({ ...keyword });
     return this;
   }
@@ -30,7 +28,8 @@ class APIFeatures {
 
     //Filtro avanzado para precio
     let queryStr = JSON.stringify(queryCopy);
-    queryStr = queryStr.replace(/\b(gt|gte|lt|lte)\b/g, (match) => `$${match}`);
+    queryStr = queryStr.replace(/\b(gt|gte|lt|lte)\b/g, (match) => 
+    `$${match}`);
 
     this.query = this.query.find(JSON.parse(queryStr));
     return this;
