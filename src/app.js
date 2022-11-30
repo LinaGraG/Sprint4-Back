@@ -1,9 +1,13 @@
 const express = require("express");
+const mongoose = require ("mongoose")
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const app = express();
 const errorMiddleware = require("./middleware/errors");
 const cookieParser = require("cookie-parser");
+
+
+mongoose.connect(`mongodb+srv://sprint4:A6SaCZ4jrUEFAGAq@sprint4.3qpoelt.mongodb.net/?retryWrites=true&w=majority`)
 
 // eneable bodyparser
 app.use(bodyParser.json());

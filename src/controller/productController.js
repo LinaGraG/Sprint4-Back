@@ -3,7 +3,7 @@ const productModel = require("../models/product");
 const APIFeatures = require("../utils/apiFeatures");
 const ErrorHandler = require("../utils/errorHandler");
 const fetch = (url) =>
-  import("node-fetch").then(({ default: fetch }) => fetch(url));
+import("node-fetch").then(({ default: fetch }) => fetch(url));
 
 // Create product /api/product/new
 exports.newProduct = catchAsyncErrors(async (req, res, next) => {
@@ -98,7 +98,7 @@ exports.deleteProduct = catchAsyncErrors(async (req, res, next) => {
 //HABLEMOS DE FETCH
 //Ver todos los productos
 function verProductos() {
-  fetch("http://localhost:4000/api/products")
+  fetch("`mongodb+srv://sprint4:A6SaCZ4jrUEFAGAq@sprint4.3qpoelt.mongodb.net/?retryWrites=true&w=majority")
     .then((res) => res.json())
     .then((res) => console.log(res))
     .catch((err) => console.error(err));
@@ -108,44 +108,44 @@ function verProductos() {
 
 //Ver por id
 function verProductoPorID(id) {
-  fetch("http://localhost:4000/api/product/" + id)
+  fetch("`mongodb+srv://sprint4:A6SaCZ4jrUEFAGAq@sprint4.3qpoelt.mongodb.net/?retryWrites=true&w=majority" + id)
     .then((res) => res.json())
     .then((res) => console.log(res))
     .catch((err) => console.error(err));
 }
 
-//verProductoPorID('63456a8d9163cb9dbbcaa235'); // Probamos el metodo con un id
+//verProductoPorID('6384178428404123393acf9f'); // Probamos el metodo con un id
 
 //Crear o actualizar una review
 exports.createProductReview = catchAsyncErrors(async (req, res, next) => {
-  const { rating, commentary, productId } = req.body;
+  const { rating, comentario, idProducto } = req.body;
 
-  const review = {
+  const opinion = {
     clientName: req.user.name,
     rating: Number(rating),
-    commentary,
+    comentario,
   };
 
-  const product = await productModel.findById(productId);
+  const product = await productModel.findById(idProducto);
 
-  const isReviewed = product.reviews.find(
-    (item) => item.clientName === req.user.name
+  const isReviewed = product.opiniones.find(
+    (item) => item.clientName === req.user.name  
   );
 
   if (isReviewed) {
-    product.reviews.forEach((review) => {
-      if (review.clientName === req.user.name) {
-        (review.commentary = commentary), (review.rating = rating);
+    product.opiniones.forEach((opinion) => {
+      if (opinion.clientName === req.user.name) {
+        opinion.comentario = comentario, 
+        opinion.rating = rating;
       }
     });
   } else {
-    product.reviews.push(review);
-    product.qualifications = product.reviews.length;
+    product.opiniones.push(opinion);
+    product.numCalificaciones = product.opiniones.length;
   }
 
-  product.rating =
-    product.reviews.reduce((acc, review) => review.rating + acc, 0) /
-    product.reviews.length;
+  product.calificacion = product.opiniones.reduce((acc, opinion) => 
+  opinion.rating + acc, 0) / product.opiniones.length;
 
   await product.save({ validateBeforeSave: false });
 
@@ -161,32 +161,27 @@ exports.getProductReviews = catchAsyncErrors(async (req, res, next) => {
 
   res.status(200).json({
     success: true,
-    reviews: product.reviews,
+    reviews: product.opiniones,
   });
 });
 
 //Eliminar review
 exports.deleteReview = catchAsyncErrors(async (req, res, next) => {
-  const product = await productModel.findById(req.query.productId);
+  const product = await productModel.findById(req.query.idProducto);
 
-  const reviews = product.reviews.filter(
-    (review) => review._id.toString() !== req.query.reviewId.toString()
-  );
+  const opiniones = product.opiniones.filter(opinion => 
+    opinion._id.toString() !== req.query.idReview.toString());
 
-  const qualifications = reviews.length;
+  const numCalificaciones = opiniones.length;
 
-  const rating =
-    product.reviews.reduce((acc, review) => review.rating + acc, 0) /
-    reviews.length;
+  const calificacion =product.opiniones.reduce((acc, Opinion) => 
+  Opinion.rating + acc, 0) /opiniones.length;
 
-  await productModel.findByIdAndUpdate(
-    req.query.productId,
-    {
-      reviews,
-      rating,
-      qualifications,
-    },
-    {
+  await productModel.findByIdAndUpdate(req.query.idProducto,{
+    opiniones,
+    calificacion,
+    numCalificaciones
+    },{
       new: true,
       runValidators: true,
       useFindAndModify: false,

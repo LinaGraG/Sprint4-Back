@@ -7,6 +7,9 @@ const {
   getProductById, 
   updateProduct, 
   deleteProduct,
+  createProductReview,
+  getProductReviews,
+  deleteReview,
  } = require("../controller/productController"); //Traemos la respuesta json desde el controlador
 const {  isAuthenticatedUser,authorizeRoles  } = require("../middleware/auth");
 
@@ -20,8 +23,8 @@ router.route ('/producto/:id').delete (isAuthenticatedUser,authorizeRoles ("admi
 
 
 // Reviews
-//router.route("/review").put(isAuthenticatedUser, createProductReview);
-//router.route("/reviews").get(getProductReviews);
-//router.route("/review").delete(isAuthenticatedUser, deleteReview);
+router.route("/review").put(isAuthenticatedUser, createProductReview);
+router.route("/reviews").get(getProductReviews);
+router.route("/review").delete(isAuthenticatedUser, deleteReview);
 
 module.exports = router;
